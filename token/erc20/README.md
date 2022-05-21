@@ -79,6 +79,13 @@ yarn hardhat compile
 将项目中的我们需要的各种环境变量，通过修改配置文件的方式配置进去：
 - .env 文件
 该文件中保存我们的私有数据，alchemy的api_key，账户的私钥等，该文件不要上传到github中。
+```
+ALCHEMY_API_KEY=
+RINKEBY_PRIVATE_KEY=
+ETHERSCAN_API_KEY=
+SNOWTRACE_API_KEY=
+FUJI_C_CHAIN_PROVIDER_URL=https://api.avax-test.network/ext/bc/C/rp
+```
 
 - hardhat.config.js 文件
 该文件中hardhat的配置信息，主要包含network，即我们要部署的网络配置：
