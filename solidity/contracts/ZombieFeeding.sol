@@ -20,10 +20,10 @@ contract ZombieFeeding is ZombieFactory {
 
   KittyInterface kittyContract;
   // 3. 增加 setKittyContractAddress 方法
-  function setKittyContractAddress(address _address) external {
+  function setKittyContractAddress(address _address) external onlyOwner {
     kittyContract = KittyInterface(_address);
   }
-  
+
   // 这里修改函数定义
   function feedAndMultiply(uint _zombieId, uint _targetDna) public {
     require(msg.sender == zombieToOwner[_zombieId]);
@@ -41,4 +41,14 @@ contract ZombieFeeding is ZombieFactory {
     feedAndMultiply(_zombieId, kittyDna);
   }
 
+   // 1. 在这里定义 `_triggerCooldown` 函数
+  function _triggerCooldown(Zombie storage _zombie) internal {
+      _zombie.readyTime = uint32(now + cooldownTime);
+  }
+
+  // 2. 在这里定义 `_isReady` 函数
+  function _isReady(Zombie storage _zombie) internal view returns(bool) {
+      return (_zombie.readyTime <= now);
+  }
+ 
 }
