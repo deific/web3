@@ -1,9 +1,16 @@
-contract Ownable {
-    address public owner;
+// SPDX-License-Identifier: Unlicensed
+pragma solidity ^0.8.4;
 
-    event OwnershipTransferred(address indexed previousOwner, address indexedOwner);
+contract Ownable {
+    address payable public owner;
+
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexedOwner
+    );
+
     constructor() {
-        owner = msg.sender;
+        owner = payable(msg.sender);
     }
 
     modifier onlyOwner() {
@@ -14,6 +21,6 @@ contract Ownable {
     function transferOwnership(address newOwner) public onlyOwner {
         require(newOwner == owner);
         emit OwnershipTransferred(owner, newOwner);
-        owner = newOwner;
+        owner = payable(newOwner);
     }
 }

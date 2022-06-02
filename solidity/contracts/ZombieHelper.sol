@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Unlicensed
 pragma solidity ^0.8.4;
 
 import "./ZombieFeeding.sol";
@@ -16,15 +17,15 @@ contract ZombieHelper is ZombieFeeding {
         zombies[_zombieId].level++;
     }
 
-    function withdraw() external onlyOwner {
-        owner.transfer(this.balance);
+    function withdraw() external payable onlyOwner {
+        owner.transfer(address(this).balance);
     }
 
     function setLevelUpFee(uint256 _fee) external onlyOwner {
         levelUpFee = _fee;
     }
 
-    function changeName(uint256 _zombieId, string _newName)
+    function changeName(uint256 _zombieId, string memory _newName)
         external
         aboveLevel(2, _zombieId)
         onlyOwnerOf(_zombieId)
@@ -43,7 +44,7 @@ contract ZombieHelper is ZombieFeeding {
     function getZombiesByOwner(address _owner)
         external
         view
-        returns (uint256[])
+        returns (uint256[] memory)
     {
         uint256[] memory result = new uint256[](ownerZombieCount[_owner]);
         // 在这里开始

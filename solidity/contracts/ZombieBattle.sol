@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Unlicensed
 pragma solidity ^0.8.4;
 
 import "./ZombieHelper.sol";
@@ -6,10 +7,16 @@ contract ZombieBattle is ZombieHelper {
     // 在这里开始
     uint256 randNonce = 0;
     uint256 attackVictoryProbability = 70;
+    using SafeMath for uint256;
+    using SafeMath32 for uint32;
+    using SafeMath16 for uint16;
 
     function randMod(uint256 _modulus) internal returns (uint256) {
         randNonce = randNonce.add(1);
-        return uint256(keccak256(now, msg.sender, randNonce)) % _modulus;
+        return
+            uint256(
+                keccak256(abi.encode(block.timestamp, msg.sender, randNonce))
+            ) % _modulus;
     }
 
     function attack(uint256 _zombieId, uint256 _targetId)
@@ -24,7 +31,7 @@ contract ZombieBattle is ZombieHelper {
             myZombie.winCount = myZombie.winCount.add(1);
             myZombie.level = myZombie.level.add(1);
             enemyZombie.lossCount = enemyZombie.lossCount.add(1);
-            feedAndMultiply(_zombieId, enemyZombie.dna, "zombie");
+            feedAndMultiply(_zombieId, enemyZombie.dna);
         } else {
             myZombie.lossCount = myZombie.lossCount.add(1);
             enemyZombie.winCount = enemyZombie.winCount.add(1);

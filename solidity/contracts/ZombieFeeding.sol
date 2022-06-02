@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Unlicensed
 pragma solidity ^0.8.4;
 
 import "./ZombieFactory.sol";
@@ -23,6 +24,9 @@ abstract contract KittyInterface {
 
 contract ZombieFeeding is ZombieFactory {
     KittyInterface kittyContract;
+    using SafeMath for uint256;
+    using SafeMath32 for uint32;
+    using SafeMath16 for uint16;
 
     modifier onlyOwnerOf(uint256 _zombieId) {
         require(msg.sender == zombieToOwner[_zombieId]);
@@ -57,11 +61,11 @@ contract ZombieFeeding is ZombieFactory {
 
     // 1. 在这里定义 `_triggerCooldown` 函数
     function _triggerCooldown(Zombie storage _zombie) internal {
-        _zombie.readyTime = uint32(now + cooldownTime);
+        _zombie.readyTime = uint32(block.timestamp.add(cooldownTime));
     }
 
     // 2. 在这里定义 `_isReady` 函数
     function _isReady(Zombie storage _zombie) internal view returns (bool) {
-        return (_zombie.readyTime <= now);
+        return (_zombie.readyTime <= block.timestamp);
     }
 }
