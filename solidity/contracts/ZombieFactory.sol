@@ -55,6 +55,7 @@ contract ZombieFactory is Ownable {
         return rand % dnaModulus;
     }
 
+    // 随机创建一个僵尸，只有第一次注册的时候会创建一个
     function createRandomZombie(string memory _name) public {
         require(ownerZombieCount[msg.sender] == 0);
         uint256 randDna = _generateRandomDna(_name);

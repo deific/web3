@@ -1,9 +1,19 @@
 import React from "react";
-import { Row, Col, Space, Card, Button, Descriptions } from "antd";
+import {
+  Row,
+  Col,
+  Space,
+  Card,
+  Input,
+  Popconfirm,
+  Button,
+  Descriptions,
+} from "antd";
 import {
   EditOutlined,
   EllipsisOutlined,
-  SettingOutlined,
+  ArrowUpOutlined,
+  ReloadOutlined,
 } from "@ant-design/icons";
 
 import { ethers } from "ethers";
@@ -23,6 +33,7 @@ class Contract extends React.Component {
   };
 
   state = {
+    newName: "",
     zombieInfo: {
       loadings: false,
       account: "no connect",
@@ -53,7 +64,16 @@ class Contract extends React.Component {
     this.contractInfo.signer = signer;
     this.contractInfo.account = accountAddress;
 
+    // const kittyAddress = "0x06012c8cf97BEaD5deAe237070F9587f8E7A266d";
+    // let tx = await this.contractInfo.contract.setKittyContractAddress(
+    //   kittyAddress
+    // );
+
     await this.showZombies();
+
+    this.contractInfo.contract.on("NewZombie", (id, name, dna) => {
+      console.log("new Zombie:", id, name, dna);
+    });
   }
 
   async showZombies() {
@@ -79,20 +99,39 @@ class Contract extends React.Component {
     });
   }
 
-  newZombie() {
+  async newZombie() {
     // 创建一个僵尸
-    let result = this.contractInfo.contract.createRandomZombie("frist");
+    let result = await this.contractInfo.contract.createRandomZombie(
+      this.state.newName
+    );
+    console.log(" new zombie result:", result);
+    await this.showZombies();
   }
 
-  showZombie(zombie) {
+  async feedOnKitty(id) {
+    let tx = await this.contractInfo.contract.feedOnKitty(id, 1);
+  }
+
+  async levelUp(zombieId) {
+    let tx = await this.contractInfo.contract.levelUp(zombieId, {
+      value: ethers.utils.parseEther("0.001"),
+    });
+    await tx.wait();
+    console.log(" new zombie result:", tx);
+    await this.showZombies();
+  }
+
+  renderZombie(id, zombie) {
     return (
       <Card
         title={"Zombie:" + zombie.name}
         actions={[
-          <SettingOutlined key="setting" />,
-          <EditOutlined key="edit" />,
-          <EllipsisOutlined key="ellipsis" />,
+          <ArrowUpOutlined key="setting" onClick={() => this.levelUp(id)} />,
+          this.renderEditDalog(id, zombie),
+          <EllipsisOutlined key="ellipsis" onClick={() => this.levelUp(id)} />,
         ]}
+        extra={<ReloadOutlined onClick={() => this.feedOnKitty(id)} />}
+        key={id}
       >
         <Descriptions column={2}>
           <Descriptions.Item label="DNA">
@@ -115,6 +154,32 @@ class Contract extends React.Component {
     );
   }
 
+  async changeZombieName(id, zombie) {
+    console.log("new name", id, this.state.newName);
+    let result = this.contractInfo.contract.changeName(id, this.state.newName);
+    console.log(" changeZombieName result:", result);
+    await this.showZombies();
+  }
+
+  renderEditDalog(id, zombie) {
+    return (
+      <Popconfirm
+        placement="top"
+        title={
+          <Input
+            placeholder="New name"
+            onChange={(e) => (this.state.newName = e.target.value)}
+          />
+        }
+        onConfirm={() => this.changeZombieName(id, zombie)}
+        okText="Yes"
+        cancelText="No"
+      >
+        <EditOutlined key="edit" />
+      </Popconfirm>
+    );
+  }
+
   render() {
     let { zombieInfo } = this.state;
     return (
@@ -129,19 +194,27 @@ class Contract extends React.Component {
               Connect Metamask
             </Button>
 
-            <Button
-              loading={zombieInfo.loadings}
-              onClick={() => this.newZombie()}
+            <Popconfirm
+              placement="top"
+              title={
+                <Input
+                  placeholder="Name"
+                  onChange={(e) => (this.state.newName = e.target.value)}
+                />
+              }
+              onConfirm={() => this.newZombie()}
+              okText="Yes"
+              cancelText="No"
             >
-              Create Zombie
-            </Button>
+              <Button loading={zombieInfo.loadings}>Create Zombie</Button>
+            </Popconfirm>
           </Space>
         </Row>
         <Row gutter={16}>
           <Space>
             {zombieInfo.zombieList.length > 0
-              ? zombieInfo.zombieList.map((zombie) => (
-                  <Col span={8}>{this.showZombie(zombie)}</Col>
+              ? zombieInfo.zombieList.map((zombie, id) => (
+                  <Col span={8}>{this.renderZombie(id, zombie)}</Col>
                 ))
               : ""}
           </Space>
