@@ -3,7 +3,7 @@ import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import "./App.less"
 import Contract from "./pages/Contact.jsx"
-
+import ZombieOwnership from "./pages/ZombieOwnership.jsx"
 const { Header, Content, Footer, Sider } = Layout;
 const items1 = ['1', '2', '3'].map((key) => ({
   key,
@@ -69,7 +69,8 @@ const App = () => (
             minHeight: 280,
           }}
         >
-          <Contract/>
+          {/* <Contract/> */}
+          <ZombieOwnership/>
         </Content>
       </Layout>
     </Content>

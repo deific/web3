@@ -14,8 +14,35 @@ node scripts/sample-script.js
 npx hardhat help
 ```
 
-# 学习网站
-https://cryptozombies.io/zh
+# 在 hardhat 网络上部署合约
 
-** 注意：课程solidity版本比较老的0.4。19，目前开发用的0.8.4，很多语法已经改变，根据提示需要修改。
+## 编译合约
 
+```
+npx hardhat compile
+```
+
+## 启动 hardhat 网络节点
+
+```
+npx hardhat node
+```
+
+## 部署脚本
+
+```
+  // We get the contract to deploy
+  const ZombieOwnership = await hre.ethers.getContractFactory("ZombieOwnership");
+  const zombieOwnership = await ZombieOwnership.deploy();
+
+  await zombieOwnership.deployed();
+
+  console.log("zombieOwnership deployed to:", zombieOwnership.address);
+```
+
+运行脚本
+
+```shell
+npx hardhat run ./scripts/sample-script.js --network localhost
+
+```
