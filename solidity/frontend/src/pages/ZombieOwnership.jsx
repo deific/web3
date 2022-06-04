@@ -8,6 +8,7 @@ import {
   Popconfirm,
   Button,
   Descriptions,
+  Spin,
 } from "antd";
 import {
   EditOutlined,
@@ -24,7 +25,7 @@ class Contract extends React.Component {
     super(props);
   }
   contractInfo = {
-    address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    address: "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
     type: "NTF",
     contract: null,
     provider: null,
@@ -34,6 +35,7 @@ class Contract extends React.Component {
 
   state = {
     newName: "",
+    loading: false,
     zombieInfo: {
       loadings: false,
       account: "no connect",
@@ -73,6 +75,7 @@ class Contract extends React.Component {
 
     this.contractInfo.contract.on("NewZombie", (id, name, dna) => {
       console.log("new Zombie:", id, name, dna);
+      this.showZombies();
     });
   }
 
@@ -105,7 +108,6 @@ class Contract extends React.Component {
       this.state.newName
     );
     console.log(" new zombie result:", result);
-    await this.showZombies();
   }
 
   async feedOnKitty(id) {
@@ -113,12 +115,14 @@ class Contract extends React.Component {
   }
 
   async levelUp(zombieId) {
+    this.setState({ loading: true });
     let tx = await this.contractInfo.contract.levelUp(zombieId, {
       value: ethers.utils.parseEther("0.001"),
     });
     await tx.wait();
     console.log(" new zombie result:", tx);
     await this.showZombies();
+    this.setState({ loading: false });
   }
 
   renderZombie(id, zombie) {
@@ -130,7 +134,7 @@ class Contract extends React.Component {
           this.renderEditDalog(id, zombie),
           <EllipsisOutlined key="ellipsis" onClick={() => this.levelUp(id)} />,
         ]}
-        extra={<ReloadOutlined onClick={() => this.feedOnKitty(id)} />}
+        extra={<ReloadOutlined onClick={() => this.newZombie()} />}
         key={id}
       >
         <Descriptions column={2}>
@@ -183,7 +187,7 @@ class Contract extends React.Component {
   render() {
     let { zombieInfo } = this.state;
     return (
-      <div>
+      <div style={{ padding: "15px" }}>
         <Row gutter={[16, 16]} justify="end">
           <Space>
             <Button
@@ -210,14 +214,12 @@ class Contract extends React.Component {
             </Popconfirm>
           </Space>
         </Row>
-        <Row gutter={16}>
-          <Space>
-            {zombieInfo.zombieList.length > 0
-              ? zombieInfo.zombieList.map((zombie, id) => (
-                  <Col span={8}>{this.renderZombie(id, zombie)}</Col>
-                ))
-              : ""}
-          </Space>
+        <Row gutter={16} style={{ padding: "10px" }}>
+          {zombieInfo.zombieList.length > 0
+            ? zombieInfo.zombieList.map((zombie, id) => (
+                <Col span={8}>{this.renderZombie(id, zombie)}</Col>
+              ))
+            : ""}
         </Row>
       </div>
     );

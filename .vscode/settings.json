@@ -1,0 +1,4 @@
+{
+    "eth-abi-interactive.nodeURI": "http://localhost:8545/",
+    "eth-abi-interactive.privateKeysFile": "/Users/steven/.eth-abi-interactive/keys.json"
+}

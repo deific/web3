@@ -5,32 +5,34 @@ import "./App.less"
 import Contract from "./pages/Contact.jsx"
 import ZombieOwnership from "./pages/ZombieOwnership.jsx"
 const { Header, Content, Footer, Sider } = Layout;
-const items1 = ['1', '2', '3'].map((key) => ({
+const items1 = ['Home', 'Zombies'].map((key) => ({
   key,
-  label: `nav ${key}`,
+  label: `${key}`,
 }));
 
-const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-  const key = String(index + 1);
-  return {
-    key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
-    children: new Array(4).fill(null).map((_, j) => {
-      const subKey = index * 4 + j + 1;
-      return {
-        key: subKey,
-        label: `option${subKey}`,
-      };
-    }),
-  };
-});
+const menu = [
+  {
+    key: "zombies",
+    icon: React.createElement(UserOutlined),
+    label: "zombies"
+  },
+  {
+    key: "rank",
+    icon: React.createElement(LaptopOutlined),
+    label: "rank"
+  },
+  {
+    key: "trading",
+    icon: React.createElement(NotificationOutlined),
+    label: "trading"
+  },
+]
 
 const App = () => (
   <Layout className="app">
     <Header className="header">
       <div className="logo" />
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} />
+      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} items={items1} />
     </Header>
     <Content
       style={{
@@ -43,24 +45,17 @@ const App = () => (
         }}
       >
         <Breadcrumb.Item>Home</Breadcrumb.Item>
-        <Breadcrumb.Item>List</Breadcrumb.Item>
         <Breadcrumb.Item>App</Breadcrumb.Item>
       </Breadcrumb>
-      <Layout
-        className="site-layout-background"
-        style={{
-          padding: '24px 0',
-        }}
-      >
+      <Layout className="site-layout-background" height="100%" style={{height: '100%'}}>
         <Sider className="site-layout-background" width={200}>
           <Menu
             mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            defaultSelectedKeys={['zombies']}
             style={{
               height: '100%',
             }}
-            items={items2}
+            items={menu}
           />
         </Sider>
         <Content
@@ -69,7 +64,6 @@ const App = () => (
             minHeight: 280,
           }}
         >
-          {/* <Contract/> */}
           <ZombieOwnership/>
         </Content>
       </Layout>
