@@ -82,12 +82,24 @@ describe("ZombieFeeding", function () {
   });
 
   it("withdraw", async function () {
-    const [owner, addr1] = await ethers.getSigners();
-    zombie = await zombie.connect(addr1);
-    let result = await zombie.withdraw(1);
-    await zombie.levelUp(1, {value: ethers.utils.parseEther('0.001')});
-    let result2 = await zombie.zombies(1);
-    expect(result.level + 1).equal(result2.level);
+    const [owner, addr1, addr2] = await ethers.getSigners();
+    let provider = ethers.getDefaultProvider();
+
+    let contractBalance = await provider.getBalance(zombie.address);
+    let ownerBalance = await provider.getBalance(owner.address);
+    console.log("contract eth balanceOf:", ethers.utils.formatEther(contractBalance));
+    console.log("ownerBalance eth balanceOf:", ethers.utils.formatEther(ownerBalance));
+
+    zombie = await zombie.connect(owner);
+    await zombie.withdraw({value: ethers.utils.parseEther('1')});
+
+    contractBalance = await provider.getBalance(zombie.address);
+    ownerBalance = await provider.getBalance(owner.address);
+    console.log("contract eth balanceOf:", ethers.utils.formatEther(contractBalance));
+    console.log("ownerBalance eth balanceOf:", ethers.utils.formatEther(ownerBalance));
+
+    ownerBalance = await owner.getBalance();
+    console.log("ownerBalance eth balanceOf:", ethers.utils.formatEther(ownerBalance));
   });
 });
 
