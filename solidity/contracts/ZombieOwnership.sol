@@ -3,6 +3,7 @@ pragma solidity ^0.8.4;
 
 import "./ZombieBattle.sol";
 import "./ERC721.sol";
+import "hardhat/console.sol";
 
 /// @title 一个管理转移僵尸所有权的合约
 /// @author steven
