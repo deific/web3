@@ -101,6 +101,13 @@ describe("ZombieFeeding", function () {
     ownerBalance = await owner.getBalance();
     console.log("ownerBalance eth balanceOf:", ethers.utils.formatEther(ownerBalance));
   });
+
+  it("getZombiesByOwner", async function () {
+    const [owner, addr1, addr2] = await ethers.getSigners();
+    zombie = await zombie.connect(addr1);
+    let zombieData = await zombie.getZombiesByOwner(addr1.address);
+    console.log("zombieData:", zombieData);
+  });
 });
 
 
