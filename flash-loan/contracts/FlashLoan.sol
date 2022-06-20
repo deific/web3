@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./FlashLoanReceiverBase.sol";
 import "./ILendingPoolAddressesProvider.sol";
 import "./ILendingPoolV1.sol";
+import "hardhat/console.sol";
 
 /**
     contract:
@@ -16,9 +17,13 @@ import "./ILendingPoolV1.sol";
 **/
 contract FlashloanV1 is FlashLoanReceiverBaseV1 {
     using SafeMath for uint256;
-    // AAVE 中 DAI 借贷池的地址
-    constructor(address _addressProvider) FlashLoanReceiverBaseV1(_addressProvider) public{}
 
+    // AAVE 中 DAI 借贷池的地址
+    constructor(address _addressProvider)
+        FlashLoanReceiverBaseV1(_addressProvider)
+    {
+        console.log("created:", _addressProvider);
+    }
 
     /**
         function:
@@ -31,10 +36,20 @@ contract FlashloanV1 is FlashLoanReceiverBaseV1 {
             onlyOwner: 仅合约持有者可调用
     **/
     function flashloan(address _asset, uint amount) public onlyOwner {
+        console.log("start flashloan: %s %s", _asset, amount);
         // 本次不需要任何闪电贷的数据, 传递一个空字符串
         bytes memory data = "";
+        console.log("start address: %s ", msg.sender);
+
+        console.log(
+            "start lendingPool: %s ",
+            addressesProvider.getLendingPool()
+        );
         // 通过 Aave 提供的 ILendingPoolV1 初始化 LendingPool 接口, 调用 flashLoan 函数
-        ILendingPoolV1 lendingPool = ILendingPoolV1(addressesProvider.getLendingPool());
+        ILendingPoolV1 lendingPool = ILendingPoolV1(
+            addressesProvider.getLendingPool()
+        );
+
         // 调用 flashLoan 函数
         /** params:
             _receiver: 接收贷款的地址, 此处为当前合约地址
@@ -42,10 +57,10 @@ contract FlashloanV1 is FlashLoanReceiverBaseV1 {
             _amount: 借款金额, 此处为 1 DAI
             _params: 可调用参数, 此处为空数据
         **/
+        console.log("flashLoaning: %s %s", _asset, amount);
         lendingPool.flashLoan(address(this), _asset, amount, data);
     }
 
-  
     /**
         function:
             executeOperation: 执行借款
@@ -62,21 +77,21 @@ contract FlashloanV1 is FlashLoanReceiverBaseV1 {
         uint256 _amount,
         uint256 _fee,
         bytes calldata _params
-    )
-        external
-        override
-    {
+    ) external override {
         // 检查由池子可向本地址借贷的代币上限, 若小于目标贷款金额, 提示错误
-        require(_amount <= getBalanceInternal(address(this), _reserve), "Insufficient liquidity pool balance");
+        require(
+            _amount <= getBalanceInternal(address(this), _reserve),
+            "Insufficient liquidity pool balance"
+        );
 
         /**
             借贷逻辑核心函数
         **/
-
+        console.log("executeOperation before: %s %s", _reserve, _fee);
         // 总贷款金额加入偿还利息
         uint totalDebt = _amount.add(_fee);
         // 归还总贷款金额
         transferFundsBackToPoolInternal(_reserve, totalDebt);
+        console.log("executeOperation after: %s %s", _reserve, totalDebt);
     }
-
 }

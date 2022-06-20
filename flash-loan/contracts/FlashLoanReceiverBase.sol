@@ -16,7 +16,7 @@ abstract contract FlashLoanReceiverBaseV1 is IFlashLoanReceiverV1, Withdrawable 
     address constant ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     ILendingPoolAddressesProviderV1 public addressesProvider;
 
-    constructor(address _addressProvider) public {
+    constructor(address _addressProvider)  {
         addressesProvider = ILendingPoolAddressesProviderV1(_addressProvider);
     }
 
