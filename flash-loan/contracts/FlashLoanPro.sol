@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 // 导入依赖
 import "./FlashLoanReceiverBase.sol";
 import "./ILendingPoolAddressesProvider.sol";
-import "./ILendingPool.sol";
-import "./Uniswap.sol";
+import "./ILendingPoolV1.sol";
+import "./IUniswapV2Router.sol";
 
 /**
     contract:
@@ -79,7 +79,7 @@ contract FlashloanV1 is FlashLoanReceiverBaseV1 {
         // 检查由池子可向本地址借贷的代币上限, 若小于目标贷款金额, 提示错误
         require(
             _amount <= getBalanceInternal(address(this), _reserve),
-            "[错误提示] 目标池子余额不足, 无法进行借贷"
+            "balance not engpha"
         );
 
         /**
