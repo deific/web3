@@ -6,6 +6,7 @@ import "./FlashLoanReceiverBase.sol";
 import "./ILendingPoolAddressesProvider.sol";
 import "./ILendingPoolV1.sol";
 import "./IUniswapV2Router.sol";
+import "hardhat/console.sol";
 
 /**
     contract:
@@ -30,7 +31,9 @@ contract FlashloanV1 is FlashLoanReceiverBaseV1 {
     constructor(address _addressProvider)
         public
         FlashLoanReceiverBaseV1(_addressProvider)
-    {}
+    {
+        console.log("created: s%", _addressProvider);
+    }
 
     /**
         function:
