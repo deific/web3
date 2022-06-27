@@ -70,13 +70,26 @@ const getPastEvent = async () => {
   })
 }
 
-const test = async () => {
-    listener();
-    await getNumber();
-    await increase2(10);
-    await getNumber();
-    await getPastEvent();
+function sleep(ms) {
+  return new Promise(resolve=>setTimeout(resolve, ms))
 }
+
+console.log("************************************");
+listener();
+const test = async () => {
+    console.log("************************************");
+    await getNumber();
+    console.log("************************************");
+    await increase2(10);
+    console.log("************************************");
+    await getNumber();
+    console.log("************************************");
+    sleep(10000);
+    await getPastEvent();
+    console.log("************************************");
+}
+
+
 
 test().then(result => {
     console.log("test compiled ");

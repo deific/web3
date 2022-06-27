@@ -26,8 +26,8 @@ const input = {
   };
 
 const tempFile = JSON.parse(solc.compile(JSON.stringify(input)));
-console.log("compiled contractFile :" + JSON.stringify(tempFile));
+// console.log("compiled contractFile :" + JSON.stringify(tempFile));
 const contractFile = tempFile.contracts['Incrementer.sol']['Incrementer'];
-console.log(`compiled contractFile : ${tempFile}`);
+// console.log(`compiled contractFile : ${tempFile}`);
 
 module.exports = contractFile;
