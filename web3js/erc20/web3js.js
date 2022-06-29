@@ -28,6 +28,7 @@ const account_from = {
 const bytecode = contractFile.evm.bytecode.object;
 const abi = contractFile.abi;
 
+console.log("abi:\n" + JSON.stringify(abi));
 /*
    -- Deploy Contract --
 */
@@ -99,10 +100,9 @@ const transfer = async () => {
         });
 }
 
-
 const main = async () => {
     // await deploy();
-    await transfer();
+    // await transfer();
 }
 
 main()
