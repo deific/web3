@@ -31,7 +31,8 @@ const abi = contractFile.abi;
 
 // create Wallet, 利用钱包进行签名
 let wallet = new ethers.Wallet(account_from.privateKey, provider);
-const receiverAddress = "0x42e77900ee1cF000a4e62106b490e40FD5330504";
+const receiverAddress = "0x5c21cEBCA4a26A58A08D42109A3920F660C0BF9F";
+const contractAddress = "0x906571bcE4281F7bC95F3f52bCe9bA2e1F8B129b";
 /**
  * 部署合约
  */
@@ -57,7 +58,6 @@ const deploy = async () => {
  * 链接合约并调用方法
  */
  const call = async () => {
-    const contractAddress = "0x906571bcE4281F7bC95F3f52bCe9bA2e1F8B129b";
     console.log('===============================2. Connect Contract');
     console.log(`Connecting to contract: ${contractAddress}`);
 
@@ -73,7 +73,6 @@ const deploy = async () => {
  * 监听事件
  */
  const listen = async () => {
-    const contractAddress = "0x8eFc85D1708C67F454EBB4CF017A309FB1b46138";
     console.log('===============================3. Connect Contract');
     console.log(`Connecting to contract: ${contractAddress}`);
 
@@ -96,7 +95,7 @@ const deploy = async () => {
       // Listen to events with filter
     let topic = ethers.utils.id('Transfer(address,address,uint256)');
     let filter = {
-        address: deployedContract.address,
+        address: contractAddress,
         topics: [topic],
         fromBlock: await provider.getBlockNumber(),
     };
@@ -109,8 +108,7 @@ const deploy = async () => {
 
     for (let step = 0; step < 3; step++) {
         let transferTransaction = await transactionContract.transfer(
-            receiverAddress,
-          10
+            receiverAddress, 10000
         );
         await transferTransaction.wait();
     
@@ -122,12 +120,13 @@ const deploy = async () => {
 }
 
 const main = async () => {
-    await deploy();
-    // await transfer();
+    // await deploy();
+    await listen();
+    await call();
 }
 
 main()
-  .then(() => process.exit(0))ß
+  .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);
     process.exit(1);
