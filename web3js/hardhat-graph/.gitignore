@@ -11,9 +11,11 @@ artifacts
 node_modules
 .env
 coverage
-coverage.json
+coverage.json                           
 typechain
 
 #Hardhat files
 cache
 artifacts
+./web3js/hardhat-graph/mygraph/build
+./web3js/hardhat-graph/mygraph/node_modules
