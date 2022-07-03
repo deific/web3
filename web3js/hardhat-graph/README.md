@@ -126,6 +126,38 @@ Next steps:
 Make sure to visit the documentation on https://thegraph.com/docs/ for further information.
 ```
 
+## 修改定义模式
+两个文件的修改范例在 ./scripts/schema.graphql 和 ./scripts/mapping.ts
+<SUBGRAPH_NAME>/schema.graphql,定义合约事件对应的实体结构，修改文件内容如下
+
+```javascript
+  type TransferEntity @entity {
+    id: ID!
+    from: Bytes! # address
+    to: Bytes! # address
+    value: BigInt!
+  }
+
+  type ApprovalEntity @entity {
+    id: ID!
+    owner: Bytes! # address
+    spender: Bytes! # address
+    value: BigInt!
+  }
+```
+### 修改simple-token
+<SUBGRAPH_NAME>/src/simple-token.ts，添加处理合约事件的方法
+
+
+### 修改实体名字
+进入 mygraph 目录
+修改 subgraph.yaml 中 entities 定义如下
+---
+entities:
+  - TransferEntity
+  - ApprovalEntity
+  - RoleGrantedEntity
+
 ### 授权
 首先获取你的 <DEPLOY KEY>，在你的 subgraph 项目主页可以找到：
 Authenticate within the CLI, build and deploy your subgraph to the Studio.
