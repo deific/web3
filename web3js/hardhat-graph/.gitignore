@@ -17,5 +17,5 @@ typechain
 #Hardhat files
 cache
 artifacts
-./web3js/hardhat-graph/mygraph/build
-./web3js/hardhat-graph/mygraph/node_modules
+./mygraph/build
+./node_modules
