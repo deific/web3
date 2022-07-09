@@ -26,4 +26,5 @@ contract Project {
 
     // Event that will be emitted whenever funding will be received
     event FundingReceived(address contributor, uint amount, uint currentTotal);
+    event NewA(address a);
 }
