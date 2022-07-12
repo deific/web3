@@ -26,5 +26,33 @@ contract Project {
 
     // Event that will be emitted whenever funding will be received
     event FundingReceived(address contributor, uint amount, uint currentTotal);
-    event NewA(address a);
+    // Event that will be emitted whenever the project starter has received the funds
+    event CreatorPaid(address recipient);
+
+    // Modifier to check current state
+    modifier inState(State _state) {
+        require(state == _state);
+        _;
+    }
+
+    // Modifier to check if the function caller is the project creator
+    modifier isCreator() {
+        require(msg.sender == creator);
+        _;
+    }
+
+    constructor(
+        address payable projectStarter,
+        string memory projectTitle,
+        string memory projectDesc,
+        uint fundRaisingDeadline,
+        uint goalAmount
+    ) public {
+        creator = projectStarter;
+        title = projectTitle;
+        description = projectDesc;
+        amountGoal = goalAmount;
+        raiseBy = fundRaisingDeadline;
+        currentBalance = 0;
+    }
 }
