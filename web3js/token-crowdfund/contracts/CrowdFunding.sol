@@ -1,9 +1,8 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import './SafeMath.sol';
-import './Project.sol';
-
+import "./SafeMath.sol";
+import "./Project.sol";
 
 contract CrowdFunding {
     using SafeMath for uint256;
@@ -22,11 +21,11 @@ contract CrowdFunding {
     );
 
     /** @dev Function to start a new project.
-      * @param title Title of the project to be created
-      * @param description Brief description about the project
-      * @param durationInDays Project deadline in days
-      * @param amountToRaise Project goal in wei
-      */
+     * @param title Title of the project to be created
+     * @param description Brief description about the project
+     * @param durationInDays Project deadline in days
+     * @param amountToRaise Project goal in wei
+     */
     function startProject(
         string calldata title,
         string calldata description,
@@ -34,7 +33,13 @@ contract CrowdFunding {
         uint amountToRaise
     ) external {
         uint raiseUntil = now.add(durationInDays.mul(1 days));
-        Project newProject = new Project(msg.sender, title, description, raiseUntil, amountToRaise);
+        Project newProject = new Project(
+            msg.sender,
+            title,
+            description,
+            raiseUntil,
+            amountToRaise
+        );
         projects.push(newProject);
         emit ProjectStarted(
             address(newProject),
@@ -47,8 +52,9 @@ contract CrowdFunding {
     }
 
     /** @dev Function to get all projects' contract addresses.
-      * @return A list of all projects' contract addresses
-      */
-    function returnAllProjects() external view returns(Project[] memory){
+     * @return A list of all projects' contract addresses
+     */
+    function returnAllProjects() external view returns (Project[] memory) {
         return projects;
     }
+}
