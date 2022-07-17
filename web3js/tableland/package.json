@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@openzeppelin/contracts": "^4.7.0",
+    "dotenv": "^16.0.1",
+    "hardhat": "^2.10.1"
+  },
+  "dependencies": {
+    "@tableland/sdk": "^2.0.2"
+  }
+}
